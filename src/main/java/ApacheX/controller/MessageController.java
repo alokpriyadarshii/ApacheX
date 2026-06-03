@@ -180,7 +180,13 @@ public final class MessageController {
     }
 
     messages.sort(Comparator.comparing(MessageVO::getTimestamp));
-    return messages;
+    return latestMessages(messages, size);
+  }
+
+  static List<MessageVO> latestMessages(List<MessageVO> messages, int count) {
+    return messages.stream()
+      .skip(Math.max(0, messages.size() - count))
+      .toList();
   }
 
   /**
