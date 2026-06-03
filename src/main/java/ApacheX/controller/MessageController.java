@@ -284,7 +284,7 @@ public final class MessageController {
       defaultForm.setOffset(recordMetadata.offset());
       defaultForm.setPartition(body.getTopicPartition());
       defaultForm.setFormat(defaultFormat);
-      defaultForm.setKeyFormat(defaultFormat);
+      defaultForm.setKeyFormat(defaultKeyFormat);
 
       model.addAttribute("messageForm", defaultForm);
 
