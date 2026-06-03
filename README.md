@@ -43,48 +43,103 @@ ApacheX is a Spring Boot based web UI for monitoring and managing Apache Kafka c
 ```text
 ApacheX/
 ├── .github/
-│   ├── workflows/             
-│   └── linters/                
-├── .mvn/                       
-├── src/
-│   ├── main/
-│   │   ├── java/ApacheX/
-│   │   │   ├── config/        
-│   │   │   ├── controller/     
-│   │   │   ├── form/           
-│   │   │   ├── model/         
-│   │   │   ├── service/        
-│   │   │   ├── util/           
-│   │   │   └── ApacheX.java    
-│   │   ├── resources/
-│   │   │   ├── static/         
-│   │   │   ├── templates/      
-│   │   │   ├── application.yml
-│   │   │   └── messages.properties
-│   │   ├── docker/             
-│   │   └── assembly/           
-│   └── test/
-│       ├── java/ApacheX/       
-│       └── resources/
-│
-├── docker-compose/
-│   └── kafka-ApacheX/          
-│
-├── chart/                     
+│   ├── linters/
+│   │   └── .ecrc
+│   ├── workflows/
+│   │   ├── close_inactive_issues.yml
+│   │   ├── main.yml
+│   │   └── pull_request.yml
+│   └── dependabot.yml
+├── .mvn/
+│   └── wrapper/
+│       └── maven-wrapper.properties
+├── chart/
 │   ├── templates/
+│   │   ├── _helpers.tpl
+│   │   ├── deployment.yaml
+│   │   ├── ingress.yaml
+│   │   ├── NOTES.txt
+│   │   └── service.yaml
 │   ├── Chart.yaml
 │   └── values.yaml
-│
 ├── contrib/
-│   └── systemd/                
-│
-├── images/                    
-├── theme/                      
-├── pom.xml                     
-├── mvnw
-├── mvnw.cmd
+│   └── systemd/
+│       ├── ApacheX.service
+│       └── start.sh
+├── docker-compose/
+│   └── kafka-ApacheX/
+│       └── docker-compose.yaml
+├── images/
+│   ├── architecture.png
+│   └── kafka_cluster.png
+├── src/
+│   ├── main/
+│   │   ├── assembly/
+│   │   │   └── bin.xml
+│   │   ├── docker/
+│   │   │   ├── ApacheX.sh
+│   │   │   └── Dockerfile
+│   │   ├── java/
+│   │   │   └── ApacheX/
+│   │   │       ├── config/
+│   │   │       ├── controller/
+│   │   │       ├── form/
+│   │   │       ├── model/
+│   │   │       ├── service/
+│   │   │       ├── util/
+│   │   │       └── ApacheX.java
+│   │   └── resources/
+│   │       ├── static/
+│   │       │   ├── css/
+│   │       │   ├── fonts/
+│   │       │   ├── images/
+│   │       │   └── js/
+│   │       ├── templates/
+│   │       │   ├── includes/
+│   │       │   ├── lib/
+│   │       │   ├── acl-overview.ftlh
+│   │       │   ├── broker-detail.ftlh
+│   │       │   ├── cluster-overview.ftlh
+│   │       │   ├── consumer-detail.ftlh
+│   │       │   ├── error.ftlh
+│   │       │   ├── message-inspector.ftlh
+│   │       │   ├── not-initialized.ftlh
+│   │       │   ├── search-message.ftlh
+│   │       │   ├── topic-create.ftlh
+│   │       │   ├── topic-detail.ftlh
+│   │       │   └── topic-messages.ftlh
+│   │       ├── application.yml
+│   │       ├── log4j.properties
+│   │       ├── log4j2.properties
+│   │       └── messages.properties
+│   └── test/
+│       ├── java/
+│       │   └── ApacheX/
+│       │       ├── controller/
+│       │       ├── kafka/
+│       │       ├── model/
+│       │       ├── protos/
+│       │       ├── util/
+│       │       ├── AbstractIntegrationTest.java
+│       │       ├── ApacheXIT.java
+│       │       ├── ApacheXTest.java
+│       │       ├── LocalRunner.java
+│       │       └── SendKafkaProtoPayload.java
+│       └── resources/
+│           ├── person.desc
+│           ├── person.proto
+│           └── sasl-ssl.properties
+├── theme/
+│   ├── _bootswatch.scss
+│   ├── _variables.scss
+│   └── install.sh
+├── .editorconfig
+├── .gitignore
 ├── kaas_local_jaas.conf
 ├── LICENSE
+├── mvnw
+├── mvnw.cmd
+├── pom.xml
 └── README.md
 ```
 
