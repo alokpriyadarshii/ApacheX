@@ -17,13 +17,13 @@ final class ByteUtils {
   }
 
   private static byte[] readBytes(ByteBuffer buffer) {
-    return readBytes(buffer, buffer.limit());
+    return readBytes(buffer, buffer.remaining());
   }
 
   private static byte[] readBytes(ByteBuffer buffer, int size) {
     final var dest = new byte[size];
     if (buffer.hasArray()) {
-      System.arraycopy(buffer.array(), buffer.arrayOffset(), dest, 0, size);
+      System.arraycopy(buffer.array(), buffer.arrayOffset() + buffer.position(), dest, 0, size);
     } else {
       buffer.mark();
       buffer.get(dest);
