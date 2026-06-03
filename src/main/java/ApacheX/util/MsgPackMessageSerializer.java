@@ -19,7 +19,7 @@ public class MsgPackMessageSerializer implements MessageSerializer {
     } catch (IOException e) {
       final String errorMsg = "Unable to pack msgpack message";
       LOGGER.error(errorMsg, e);
-      throw new DeserializationException(errorMsg);
+      throw new SerializationException(errorMsg);
     }
   }
 
