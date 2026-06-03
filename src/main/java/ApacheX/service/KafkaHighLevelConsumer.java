@@ -164,8 +164,8 @@ public final class KafkaHighLevelConsumer {
     final var latestOffsets = kafkaConsumer.endOffsets(partitions);
 
     for (var partition : partitions) {
-      final var latestOffset = Math.max(0, latestOffsets.get(partition) - 1);
-      kafkaConsumer.seek(partition, Math.max(0, latestOffset - count));
+      final var endOffset = latestOffsets.get(partition);
+      kafkaConsumer.seek(partition, Math.max(0, endOffset - count));
     }
 
     final var totalCount = count * partitions.size();
@@ -173,7 +173,7 @@ public final class KafkaHighLevelConsumer {
       = partitions.stream().collect(Collectors.toMap(p -> p, p -> new ArrayList<>(count)));
 
     var moreRecords = true;
-    while (rawRecords.size() < totalCount && moreRecords) {
+    while (rawRecordCount(rawRecords) < totalCount && moreRecords) {
       final var polled = kafkaConsumer.poll(Duration.ofMillis(POLL_TIMEOUT_MS));
 
       moreRecords = false;
@@ -181,7 +181,7 @@ public final class KafkaHighLevelConsumer {
         var records = polled.records(partition);
         if (!records.isEmpty()) {
           rawRecords.get(partition).addAll(records);
-          moreRecords = records.get(records.size() - 1).offset() < latestOffsets.get(partition) - 1;
+          moreRecords |= records.get(records.size() - 1).offset() < latestOffsets.get(partition) - 1;
         }
       }
     }
@@ -192,6 +192,10 @@ public final class KafkaHighLevelConsumer {
       .flatMap(Collection::stream)
       .map(rec -> createConsumerRecord(rec, deserializers))
       .toList();
+  }
+
+  private static int rawRecordCount(Map<TopicPartition, List<ConsumerRecord<byte[], byte[]>>> rawRecords) {
+    return rawRecords.values().stream().mapToInt(List::size).sum();
   }
 
   /**
