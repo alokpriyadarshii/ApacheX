@@ -15,6 +15,7 @@ import ApacheX.model.TopicVO;
 import ApacheX.service.KafkaMonitor;
 import ApacheX.service.MessageInspector;
 import ApacheX.util.Deserializers;
+import ApacheX.util.IntMessageDeserializer;
 import ApacheX.util.MessageFormat;
 import ApacheX.util.Serializers;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -71,6 +72,28 @@ class MessageControllerTest {
     assertEquals(MessageFormat.DEFAULT, messageForm.getKeyFormat());
   }
 
+  @Test
+  void getPartitionOrMessagesSupportsIntMessageFormat() {
+    final var topicName = "topic";
+    final var topicPartition = new TopicPartition(topicName, 0);
+    final var recordMetadata = new RecordMetadata(topicPartition, 0, 0, 42, 0, 0);
+    final var kafkaMonitor = new FakeKafkaMonitor(topicName, recordMetadata);
+    final var messageInspector = new MessageInspector(kafkaMonitor);
+
+    final var controller = new MessageController(
+      kafkaMonitor,
+      messageInspector,
+      new MessageFormatProperties(),
+      new SchemaRegistryProperties(),
+      new ProtobufDescriptorProperties(),
+      true);
+
+    controller.getPartitionOrMessages(topicName, 0, 0L, 1, "INT", "INT", null, null, false);
+
+    assertEquals(IntMessageDeserializer.class, kafkaMonitor.lastDeserializers.getKeyDeserializer().getClass());
+    assertEquals(IntMessageDeserializer.class, kafkaMonitor.lastDeserializers.getValueDeserializer().getClass());
+  }
+
   private static MessageVO messageAt(long timestamp) {
     final var message = new MessageVO();
     message.setTimestamp(new Date(timestamp));
@@ -80,6 +103,7 @@ class MessageControllerTest {
   private static final class FakeKafkaMonitor implements KafkaMonitor {
     private final String topicName;
     private final RecordMetadata recordMetadata;
+    private Deserializers lastDeserializers;
 
     private FakeKafkaMonitor(String topicName, RecordMetadata recordMetadata) {
       this.topicName = topicName;
@@ -109,6 +133,7 @@ class MessageControllerTest {
     @Override
     public List<MessageVO> getMessages(TopicPartition topicPartition, long offset, int count,
                                        Deserializers deserializers) {
+      lastDeserializers = deserializers;
       return Collections.emptyList();
     }
 

@@ -79,6 +79,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Tag(name = "message-controller", description = "Message Controller")
 @Controller
@@ -450,13 +451,13 @@ public final class MessageController {
    * @return
    */
   private MessageFormat getSelectedMessageFormat(String format) {
-    if ("AVRO".equalsIgnoreCase(format)) {
-      return MessageFormat.AVRO;
-    } else if ("PROTOBUF".equalsIgnoreCase(format)) {
-      return MessageFormat.PROTOBUF;
-    } else if ("MSGPACK".equalsIgnoreCase(format)) {
-      return MessageFormat.MSGPACK;
-    } else {
+    if (format == null) {
+      return MessageFormat.DEFAULT;
+    }
+
+    try {
+      return MessageFormat.valueOf(format.trim().toUpperCase(Locale.ROOT));
+    } catch (IllegalArgumentException ex) {
       return MessageFormat.DEFAULT;
     }
   }
