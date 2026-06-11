@@ -74,7 +74,7 @@ public final class MessageVO {
   }
 
   public String getHeadersFormatted() {
-    if (headers.isEmpty()) {
+    if (headers == null || headers.isEmpty()) {
       return "empty";
     } else {
       return headers.entrySet().stream()
